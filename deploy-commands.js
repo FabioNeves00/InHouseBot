@@ -6,38 +6,38 @@ import { Routes } from "discord-api-types/v9";
 const commands = [
   //create team command
   new SlashCommandBuilder()
-    .setName("Create Team")
-    .setDescription("Creates a team with the name given")
+    .setName("createteam")
+    .setDescription("creates a team with the name given")
     .addStringOption((Option) =>
-      Option.setName("Name")
-        .setDescription("Name of the team you want to create")
+      Option.setName("name")
+        .setDescription("name of the team you want to create")
         .setRequired(true)
     ),
   //invite member to team command
   new SlashCommandBuilder()
-    .setName("Invite")
+    .setName("invite")
     .setDescription("invites a player to your team")
     .addMentionableOption((Option) =>
-      Option.setName("Player")
-        .setDescription("Player you want to invite to your team")
+      Option.setName("player")
+        .setDescription("player you want to invite to your team")
         .setRequired(true)
     ),
   //setTeamLeader command
   new SlashCommandBuilder()
-    .setName("Set Leader")
-    .setDescription("Sets a new leader to your team")
+    .setName("setleader")
+    .setDescription("sets a new leader to your team")
     .addMentionableOption((Option) =>
-      Option.setName("Player")
-        .setDescription("Player you want to set as the new leader")
+      Option.setName("player")
+        .setDescription("player you want to set as the new leader")
         .setRequired(true)
     ),
   //Kick command
   new SlashCommandBuilder()
-    .setName("Kick")
-    .setDescription("Kicks a member from your team")
+    .setName("kick")
+    .setDescription("kicks a member from your team")
     .addMentionableOption((Option) =>
-      Option.setName("Player")
-        .setDescription("Player you want to remove from your team")
+      Option.setName("player")
+        .setDescription("player you want to remove from your team")
         .setRequired(true)
     ),
 ].map((command) => command.toJSON());
