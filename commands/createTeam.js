@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const fs = require("fs");
+const {isOwner, isConfirmed} = require("../authorize")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,26 +12,9 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    let checker = false; 
     const { value } = interaction.options.data[0]
     const data = await JSON.parse(fs.readFileSync("./database/teams.json", "utf8"))
-    for (let i = 0; i < data.teams.length; i++) { 
-      //Checks if the player is already confirmed on a team ( confirming system under construction)
-        for (let j = 0; j < data.teams[i].integrantes.length; j++) {
-          if (data.teams[i].integrantes[j].status === "CONFIRMED") {
-            checker = true
-            break;
-          }
-        }
-    }
-    for(let i = 0; i < data.teams.length; i++){
-      //Checks if a player is an owner of a team
-      if (data.teams[i].nome === value || data.teams[i].captain === `${interaction.member.user.tag}`){
-        checker = true;
-        break;
-      }
-    }
-    if(!checker){
+    if (isOwner(interaction, data, value) === false && isConfirmed(data, interaction.member.user.tag) === false){
       //Creates the team on the json
       data.teams.push({
         nome: `${value.toLowerCase()}`,
