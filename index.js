@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { Client, Collection, Intents } = require("discord.js");
-const { token } = require("./config.json");
+const { token, dbConnection } = require("./config.json");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 //gets all the commandds
@@ -25,6 +25,8 @@ client.once("ready", () => {
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
 
+  
+
   const command = client.commands.get(interaction.commandName);
 
   if (!command) return;
@@ -40,20 +42,11 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-async function notFound(msg) {
-  const notFound = new MessageEmbed()
-    .setTitle("Ajuda: Comando não encontrado")
-    .setAuthor("Mine Bot")
-    .addFields({
-      name: "Explicação",
-      value:
-        "Comando não encontrado linda, use o ?comandos para ver os comandos disponíveis",
-    })
-    .setImage(
-      "https://tenor.com/view/quby-chan-confused-huh-what-what-is-it-gif-17010842"
-    )
-    .setFooter("Mine Bot");
-  msg.channel.send({ embeds: [notFound] });
-}
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  if (interaction.commandName === "createteam") {
+  }
+});
 
 client.login(token);
