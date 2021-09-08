@@ -1,28 +1,11 @@
 {
   "teams": [
     {
-      "nome": "CALORS",
-      "integrantes": {
-        "top": "pinto",
-        "jungle": "penis",
-        "mid": "batota",
-        "adc": "joao",
-        "sup": "pintodnv"
-      }
-    },
-    {
-      "nome": "CALORS2",
-      "integrantes": {
-        "top": "pinto",
-        "jungle": "penis",
-        "mid": "batota",
-        "adc": "joao",
-        "sup": "pintodnv"
-      }
-    },
-    {
-      "nome": "aaa",
-      "integrantes": {}
+      "nome": "",
+      "captain": "",
+      "integrantes": [
+        {}
+      ]
     }
   ]
 }

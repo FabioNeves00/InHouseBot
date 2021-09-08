@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { Client, Collection, Intents } = require("discord.js");
-const { token, dbConnection } = require("./config.json");
+const { token } = require("./config.json");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 //gets all the commandds
@@ -39,13 +39,6 @@ client.on("interactionCreate", async (interaction) => {
       content: "There was an error while executing this command!",
       ephemeral: true,
     });
-  }
-});
-
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isCommand()) return;
-
-  if (interaction.commandName === "createteam") {
   }
 });
 
