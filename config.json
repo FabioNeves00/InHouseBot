@@ -1,7 +1,6 @@
 {
-  "clientId": "884441281701503056",
-  "guildId": "884150742699622430",
-  "token": "ODg0NDQxMjgxNzAxNTAzMDU2.YTYiIQ.BOitE__Nkrwa5OuaKncB5Eyuxn0",
-  "prefix": "#",
+  "clientId": "CLIENT_ID",
+  "guildId": "GUILD_ID",
+  "token": "YOUR_TOKEN_HERE",
   "port": "5500"
 }
