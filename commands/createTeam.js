@@ -11,13 +11,28 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    const { value } = interaction.options.data[0];
-    const team = new Team({
-      name: `${value.toLowerCase()}`,
-      captain: `${interaction.member.user.tag}`,
-      players: [],
-    });
-    await team.save();
-    interaction.reply(`Successfully created team ${value}`);
+    if (await isOwner(interaction) == false) {
+      //gets team name
+      const { value } = interaction.options.data[0];
+      //creates new team
+      const team = new Team({
+        name: `${value.toLowerCase()}`,
+        captain: `${interaction.member.user.tag}`,
+        players: [],
+      });
+
+      //saves team to database
+      await team.save();
+      //replies to the message
+      interaction.reply(`Successfully created team ${value}`);
+    } else {
+      interaction.reply(`failed to create team`);
+    }
   },
+};
+
+const isOwner = async (interaction) => {
+  var isowner = await Team.findOne({ captain: interaction.member.user.tag });
+  if (isowner) return true
+  else return false
 };
