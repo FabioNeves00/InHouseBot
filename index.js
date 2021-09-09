@@ -1,7 +1,8 @@
 const fs = require("fs");
 const { Client, Collection, Intents } = require("discord.js");
-const { token } = require("./config.json");
+const { token, url } = require("./config.json");
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const mongoose = require('mongoose');
 
 //gets all the commandds
 client.commands = new Collection();
@@ -15,6 +16,8 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
+connectDB(url)
+
 //client is ready
 client.once("ready", () => {
   console.log("Logged as => " + client.user.tag);
@@ -24,8 +27,6 @@ client.once("ready", () => {
 //interaction handling
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
-
-  
 
   const command = client.commands.get(interaction.commandName);
 
@@ -43,3 +44,9 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.login(token);
+
+async function connectDB(url) {
+  await mongoose.connect(url, () => {
+    console.log("connected to db")
+  })
+}
