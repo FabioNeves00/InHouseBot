@@ -11,13 +11,13 @@ module.exports = {
       async execute(interaction) {
         if(await isOnTeam(interaction.member.user.tag) && !(await isOwner(interaction))){
             let team = await Team.findOne({players: { $in: [interaction.member.user.tag]} });
-            const updatedPlayers = team.players.filter((element) => { return element != interaction.member.user.tag })
-            console.log(updatedPlayers)
+            const updatedPlayers = team.players.splice(team.players.indexOf(interaction.member.user.tag), 1)
             const updatedTeam = Team.updateOne(
                 {players: { $in: [interaction.member.user.tag]} },
                 { $set: { players: [updatedPlayers] } }
                 )
-            interaction.reply("ptino calma mano")
+            team.save().then(
+            interaction.reply("ptino calma mano"))
         }
         else interaction.reply("you can't leave your team")
       }

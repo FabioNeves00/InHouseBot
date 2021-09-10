@@ -22,13 +22,14 @@ module.exports = {
 
       if (team && isOwner(interaction) && isOnTeam(user)){
 
-        const updatedPlayers = team.players.filter((element) => { return element == value})
+        const updatedPlayers = team.players.splice(team.players.indexOf(user), 1)
         const updatedTeam = Team.updateOne(
-            {players: { $in: [value]} },
-            { $set: { players: updatedPlayers } }
-          )
-        
-        interaction.reply(`Successfully kicked ${user}`)
+          { players: { $in: [user] } },
+          { $set: { players: [updatedPlayers] } }
+        )
+        team.save().then(
+          interaction.reply(`Successfully kicked ${user}`)
+        )
       }
       else interaction.reply(`You're not the owner of the user's team`)
     })
