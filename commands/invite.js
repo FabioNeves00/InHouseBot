@@ -13,7 +13,7 @@ module.exports = {
     .setDescription("invites a player to your team")
     .addMentionableOption((Option) =>
       Option.setName("mention")
-        .setDescription("mention the player you want to invite")
+        .setDescription("@ the player you want to invite")
         .setRequired(true)
     ),
   async execute(interaction) {
