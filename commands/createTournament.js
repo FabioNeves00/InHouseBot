@@ -28,7 +28,7 @@ module.exports = {
         if(date.indexOf('/')){
             let mask = date.split('/')
             if(Number(mask[0]) <= 31 && Number(mask[1]) <= 12) {
-                if (await isAdm(interaction) && !(await isScheduled(date))) {
+                if (await isAdm(interaction) && await isScheduled(date) === false) {
                     //creates new team
                     const tournament = new Tournament({
                         date: date,
@@ -40,8 +40,10 @@ module.exports = {
                     await tournament.save();
                     //replies to the message
                     interaction.reply(`Successfully scheduled tournament`);
-                } else {
+                } else if(!(await isAdm(interaction))) {
                     interaction.reply(`You need to be an admin to execute this command`);
+                } else {
+                    interaction.reply(`There already is a tournament scheduled that day`);
                 }
             } else {
                 interaction.reply(`Invalid date`);
