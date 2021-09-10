@@ -8,7 +8,7 @@ const teamSchema = mongoose.Schema({
     captain: {
         type: String
     },
-    players: []
+    players: {type: [String]}
 });
 
 module.exports = mongoose.model("Team", teamSchema)
