@@ -1,6 +1,12 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const {
+  SlashCommandBuilder
+} = require("@discordjs/builders");
 const Team = require("../models/Team");
-const { isOwner, Exists, isOnTeam } = require("../auths.js")
+const {
+  isOwner,
+  Exists,
+  isOnTeam
+} = require("../auths.js")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,8 +18,10 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-      //gets team name
-      const { value } = interaction.options.data[0];
+    //gets team name
+    const {
+      value
+    } = interaction.options.data[0];
     if (!(await isOwner(interaction)) && !(await Exists(value)) && !(await isOnTeam(interaction.member.user.tag))) {
       //creates new team
       const team = new Team({
@@ -31,5 +39,3 @@ module.exports = {
     }
   },
 };
-
-
