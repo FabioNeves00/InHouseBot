@@ -17,5 +17,5 @@ const isOnTeam = async (user) => {
 }
 
 module.exports = {
-    isOwner, Exists
+  isOwner, Exists, isOnTeam
 }

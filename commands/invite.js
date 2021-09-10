@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Team = require("../models/Team");
-const { isOwner, Exists } = require("../auths.js")
+const { isOwner, isOnTeam } = require("../auths.js")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,19 +12,28 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-      const { value } = interaction.options.data[0];
-      console.log(value);
-      const team = await Team.findOne({ captain: interaction.member.user.tag })
-      await interaction.client.users.fetch(value, false).then((user) => {
+    let { value } = interaction.options.data[0];
+    //formats userid from value to only numbers
+    value = value.replace(/[<>{}@!]/g,'')
+
+    const team = await Team.findOne({ captain: interaction.member.user.tag })
+    //fetchs the usertag by the userid
+    await interaction.client.users.fetch(value, false).then((user) => {
+
+      if (team.players.length < 5 && isOwner(interaction) && isOnTeam(user)){
+
         let invited = `${user.username}#${user.discriminator}`
-        console.log(invited);
         let updatedPlayers = team.players.push(invited)
+
         const updatedTeam = Team.updateOne(
-          {captain: interaction.member.user.tag},
-          { $set: {players: updatedPlayers}}
+          { captain: interaction.member.user.tag },
+          { $set: { players: updatedPlayers } }
         )
+        team.save()
+
         interaction.reply(`Successfully invited ${invited}`)
-      })
+      }
+    })
   }
 };
 
