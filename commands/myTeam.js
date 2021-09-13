@@ -16,7 +16,7 @@ module.exports = {
     if(!team){
         team = await Team.findOne({ players: [interaction.member.user.tag]})
     }
-    interaction.reply(`Team name: ${team.name}, captain: ${team.captain}, members: ${team.players}`)
+    interaction.reply(`Team name: ${team.name}, captain: ${team.captain}, members: ${team.captain}, ${team.players}`)
     
   }
 };

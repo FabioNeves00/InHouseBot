@@ -28,6 +28,7 @@ module.exports = {
         name: `${value.toLowerCase()}`,
         captain: `${interaction.member.user.tag}`,
         players: [],
+        team: true
       });
 
       //saves team to database

@@ -16,11 +16,9 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        let {
+        const {
             value
         } = interaction.options.data[0];
-        //formats userid from value to only numbers
-        value = value.replace(/[<>{}@!]/g, '')
 
         const team = await Team.findOne({
             name: value
