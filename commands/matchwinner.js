@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Tree = require("../models/tournamentTrees");
-const { isAdm } = require("../auths.js");
+const Team = require("../models/Team");
+const { isAdm, Exists, isScheduled } = require("../auths.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,11 +16,6 @@ module.exports = {
             Option.setName("winner")
                 .setDescription("Winner team")
                 .setRequired(true)
-        )
-        .addStringOption((Option) =>
-            Option.setName("loser")
-                .setDescription("Loser team")
-                .setRequired(true)
         ),
 
     async execute(interaction) {
@@ -27,34 +23,31 @@ module.exports = {
             const {
                 value
             } = interaction.options.data[0];
-            const  winner = interaction.options.data[1].value;
-            const  loser = interaction.options.data[2].value;
-            let tree = await Tree.findOne({ date: value })
-            if (!tree) {
-                interaction.reply("There is no tournament scheduled for that day")
-                return
-            }
-            const updated = (w, l) => {
-                for (let i = 0; i < tree.teams.length; i++) {
-                    for (let j = 0; j < 1; j++) {
-                        if (tree.teams[i][j] === w) {
-                            tree.teams[i][j] === `:white_check_mark:${w}`
-                        }
-                        if (tree.teams[i][j] === l) {
-                            tree.teams[i][j] === `:x:${l}`
-                        }
+            const winner = interaction.options.data[1].value;
+            if(Exists(winner) && isScheduled(value)){
+                const team = await Team.updateOne({name: winner}, {$set: {winner: true}})
+                const tree = await Tree.findOne({date: value})  
+                const updates = tree.teams.forEach(time => {
+                    if(time.indexOf(winner)){
+                        console.log(time[time.indexOf(winner)]);
+                        time[time.indexOf(winner)] = `:white_check_mark: ${winner}`
+                        console.log(time[time.indexOf(winner)]);
+                        // return tree.teams
                     }
-                }
-                return tree.teams
+                });
+                const updatedTree = Tree.updateOne({
+                    date: value
+                  }, {
+                    $set: {
+                      teams: updates
+                    }
+                  })
+                tree.save()
+                interaction.reply(`Team ${winner} won the match`)
+                
             }
-            const update = Tree.updateOne(
-                { date: value },
-                {
-                    teams: updated(winner, loser)
-                })
-            tree.save().then(
-                interaction.reply(`Successfully set a win for the team ${winner}`)
-            )
+        } else {
+            interaction.reply("You're not an admin")
         }
     }
 };

@@ -31,7 +31,7 @@ module.exports = {
 
             if (team && isOwner(interaction) && isOnTeam(user)) {
 
-                const updatedTeam = team.captain = user.tag
+                const updatedTeam = team.captain.user.tag
                 let updatedPlayers = team.players.splice(team.players.indexOf(user), 1)
                 updatedPlayers = team.players.push(interaction.member.user.tag)
                 

@@ -9,7 +9,8 @@ const teamSchema = mongoose.Schema({
         type: String
     },
     players: {type: [String]},
-    team: {type: Boolean}
+    team: {type: Boolean},
+    winner: {type: Boolean}
 });
 
 module.exports = mongoose.model("Team", teamSchema)
