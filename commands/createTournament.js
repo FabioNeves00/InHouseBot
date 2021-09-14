@@ -31,7 +31,7 @@ module.exports = {
                 if (await isAdm(interaction) && await isScheduled(date) === false) {
                     //creates new team
                     const tournament = new Tournament({
-                        date: date,
+                        date: date, 
                         organizer: `${interaction.member.user.tag}`,
                         prize: `${prize} RP`
                     });
