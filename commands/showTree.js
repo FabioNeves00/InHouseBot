@@ -15,7 +15,7 @@ module.exports = {
     const {
       value
     } = interaction.options.data[0];
-
+    
     let tree = await Tree.findOne({ date: value })
     if (!tree) {
       interaction.reply("There is no tournament scheduled for that day")

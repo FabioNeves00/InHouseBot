@@ -26,23 +26,22 @@ module.exports = {
             const winner = interaction.options.data[1].value;
             if(Exists(winner) && isScheduled(value)){
                 const team = await Team.updateOne({name: winner}, {$set: {winner: true}})
-                const tree = await Tree.findOne({date: value})  
-                const updates = tree.teams.forEach(time => {
-                    if(time.indexOf(winner)){
-                        console.log(time[time.indexOf(winner)]);
-                        time[time.indexOf(winner)] = `:white_check_mark: ${winner}`
-                        console.log(time[time.indexOf(winner)]);
-                        // return tree.teams
+                const tree = await Tree.findOne({date: value})
+                let newArr = []
+                tree.teams.forEach(time => {
+                    if(time[0] == winner || time[1] == winner){
+                        time[0] = `:white_check_mark: ${time[0]}`
                     }
+                    newArr.push(time)
                 });
+                
                 const updatedTree = Tree.updateOne({
                     date: value
                   }, {
                     $set: {
-                      teams: updates
+                      teams: newArr
                     }
                   })
-                tree.save()
                 interaction.reply(`Team ${winner} won the match`)
                 
             }
