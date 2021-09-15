@@ -6,7 +6,8 @@ const {
   isOwner,
   Exists,
   isOnTeam
-} = require("../auths.js")
+} = require("../auths.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -34,7 +35,16 @@ module.exports = {
       //saves team to database
       await team.save();
       //replies to the message
-      interaction.reply(`Successfully created team ${value}`);
+
+      const teamMsg = new MessageEmbed()
+      .setTitle(`Successfully created team ${value}`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .addField('Captain', `${team.captain}`)
+      .addField('Members', `\n empty \n empty \n empty \n empty \n empty`)
+      .setTimestamp()
+
+      interaction.reply({embeds: [teamMsg]});
+
     } else {
       interaction.reply(`Failed to create team`);
     }
