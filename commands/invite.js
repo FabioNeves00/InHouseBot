@@ -6,6 +6,7 @@ const {
   isOwner,
   isOnTeam
 } = require("../auths.js")
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -32,9 +33,9 @@ module.exports = {
       if (team.players.length < 5 && isOwner(interaction) && isOnTeam(user)) {
 
         let invited = `${user.username}#${user.discriminator}`
-        let updatedPlayers = team.players.push(invited)
+        team.players.push(invited)
 
-        const updatedTeam = Team.updateOne({
+        await Team.updateOne({
           captain: interaction.member.user.tag
         }, {
           $set: {
@@ -42,7 +43,12 @@ module.exports = {
           }
         })
         team.save()
-        interaction.reply(`Successfully invited ${invited}`)
+        const teammsg = new MessageEmbed()
+        .setTitle(`Successfully invited player ${invited} to team ${team.name}`)
+        .setThumbnail(`${interaction.member.user.avatarURL()}`)
+        .setTimestamp()
+    
+        interaction.reply({embeds: [teammsg]});
       }
     })
   }

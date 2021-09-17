@@ -5,6 +5,7 @@ const Team = require("../models/Team");
 const {
     isAdm
 } = require("../auths.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,12 +26,20 @@ module.exports = {
         })
         //fetchs the usertag by the userid
             if (team && isAdm(interaction)) {
-                let name = team.name
                 await Team.deleteOne({ name: value })
-                .then(
-                    team.save()
-                .then(
-                    interaction.reply(`Successfully disqualified team ${name}`)))
-            } else interaction.reply(`You're not an admin or team doesn't exists`)
+                const teammsg = new MessageEmbed()
+                .setTitle(`Successfully disqualified team ${team.name}`)
+                .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                .setTimestamp()
+  
+                interaction.reply({embeds: [teammsg]});
+            } else {
+                const err = new MessageEmbed()
+                .setTitle(`Failed to disqualify team ${team.name}`)
+                .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                .setTimestamp()
+  
+                interaction.reply({embeds: [err]});
+            }
     }
 };

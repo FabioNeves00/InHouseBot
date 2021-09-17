@@ -6,6 +6,7 @@ const {
   isOwner,
   isOnTeam
 } = require("../auths.js")
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -32,7 +33,7 @@ module.exports = {
       if (team && isOwner(interaction) && isOnTeam(user)) {
 
         const updatedPlayers = team.players.splice(team.players.indexOf(user), 1)
-        const updatedTeam = Team.updateOne({
+        await Team.updateOne({
           players: {
             $in: [user]
           }
@@ -41,10 +42,21 @@ module.exports = {
             players: [updatedPlayers]
           }
         })
-        team.save().then(
-          interaction.reply(`Successfully kicked ${user}`)
-        )
-      } else interaction.reply(`You're not the owner of the user's team`)
+        await team.save()
+        const teammsg = new MessageEmbed()
+        .setTitle(`Successfully kicked player ${user.username}`)
+        .setThumbnail(`${interaction.member.user.avatarURL()}`)
+        .setTimestamp()
+    
+        interaction.reply({embeds: [teammsg]});
+      } else {
+        const teammsg = new MessageEmbed()
+        .setTitle(`You are not the owner of the team`)
+        .setThumbnail(`${interaction.member.user.avatarURL()}`)
+        .setTimestamp()
+    
+        interaction.reply({embeds: [teammsg]});
+      }
     })
   }
 };

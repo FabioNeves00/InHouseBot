@@ -6,9 +6,7 @@ const {
   isOwner,
   isOnTeam
 } = require("../auths.js");
-const {
-  update
-} = require("../models/Team");
+const { MessageEmbed } = require("discord.js");
 
 
 module.exports = {
@@ -23,7 +21,7 @@ module.exports = {
         }
       });
       const updatedPlayers = team.players.splice(team.players.indexOf(interaction.member.user.tag), 1)
-      const updatedTeam = Team.updateOne({
+      await Team.updateOne({
         players: {
           $in: [interaction.member.user.tag]
         }
@@ -32,8 +30,21 @@ module.exports = {
           players: [updatedPlayers]
         }
       })
-      team.save().then(
-        interaction.reply("ptino calma mano"))
-    } else interaction.reply("you can't leave your team")
+      await team.save()
+      const teamMsg = new MessageEmbed()
+      .setTitle(`Successefully leaved team ${team.name}`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .setTimestamp()
+  
+      interaction.reply({embeds: [teamMsg]});
+    } else {
+      const err = new MessageEmbed()
+      .setTitle(`Cannot leave team as captain`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .addField("Solution", "Try first changecaptain command, or giveup")
+      .setTimestamp()
+  
+      interaction.reply({embeds: [err]});
+    }
   }
 }

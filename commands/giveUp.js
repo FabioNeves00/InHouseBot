@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Team = require("../models/Team");
-const { isOwner } = require("../auths.js")
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,12 +10,20 @@ module.exports = {
   async execute(interaction) {
     const team = await Team.findOne({ captain: interaction.member.user.tag })
     if(!team) {
-        interaction.reply(`You're not the captain of any team`) 
+      const err = new MessageEmbed()
+      .setTitle(`You are not the owner of any team`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .setTimestamp()
+  
+      interaction.reply({embeds: [err]}); 
         return;
     }
-    let name = team.name
     await Team.deleteOne({ captain: interaction.member.user.tag })
-    .then(interaction.reply(`Successfully deleted team ${name}`))
-    
+    const teammsg = new MessageEmbed()
+      .setTitle(`Successfully deleted team ${team.name}`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .setTimestamp()
+  
+      interaction.reply({embeds: [teammsg]});
   }
 };
