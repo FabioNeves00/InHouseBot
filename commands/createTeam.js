@@ -47,7 +47,13 @@ module.exports = {
       interaction.reply({embeds: [teamMsg]});
 
     } else {
-      interaction.reply(`Failed to create team`);
+      const err1 = new MessageEmbed()
+      .setTitle(`Error`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .addField('Failed to create team', `${value.toLowerCase()} already exists`)
+      .setTimestamp()
+
+      interaction.reply({embeds: [err1]});
     }
   },
 };

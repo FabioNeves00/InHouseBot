@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Team = require("../models/Team");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,12 +9,24 @@ module.exports = {
 
   async execute(interaction) {
     const teams = await Team.find({ team: true })
-    if (!teams) return
-
+    if (!teams) {
+        const err1 = new MessageEmbed()
+        .setTitle(`There is no team yet created`)
+        .setThumbnail(`${interaction.member.user.avatarURL()}`)
+        .setTimestamp()
+        interaction.reply({embeds: [err1]});
+        return
+    }
     let ArrNames = []
     for (let count = 0; count < teams.length; count++) {
       ArrNames.push(" " + teams[count].name);
     }
-    interaction.reply(`Os times são: ${ArrNames}`)
+    const teammsg = new MessageEmbed()
+      .setTitle(`Teams created`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .addField('Teams', `${ArrNames}`)
+      .setTimestamp()
+
+      interaction.reply({embeds: [teammsg]});
   }
 };

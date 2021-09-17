@@ -5,6 +5,7 @@ const Tournament = require("../models/Tournament");
 const {
     isAdm, isScheduled
 } = require("../auths.js")
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -39,17 +40,49 @@ module.exports = {
                     //saves team to database
                     await tournament.save();
                     //replies to the message
-                    interaction.reply(`Successfully scheduled tournament`);
+                    const tournamentmsg = new MessageEmbed()
+                    .setTitle(`Successfully scheduled tournament`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .addField('Organizer', `${interaction.member.user.tag}`)
+                    .addField('Infos', `Day: ${date}\nPrize Pool: ${prize} RP`)
+                    .setTimestamp()
+
+                    interaction.reply({embeds: [tournamentmsg]});
+
                 } else if(!(await isAdm(interaction))) {
-                    interaction.reply(`You need to be an admin to execute this command`);
+                    const err1 = new MessageEmbed()
+                    .setTitle(`Error`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .addField('You are not an admin', "Contact an admin to use this command")
+                    .setTimestamp()
+
+                    interaction.reply({embeds: [err1]});
                 } else {
-                    interaction.reply(`There already is a tournament scheduled that day`);
+                    const err2 = new MessageEmbed()
+                    .setTitle(`Error`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .addField('There is already a tournament scheduled at that day', "Try other day")
+                    .setTimestamp()
+
+                    interaction.reply({embeds: [err2]});
                 }
             } else {
-                interaction.reply(`Invalid date`);
+                const err3 = new MessageEmbed()
+                    .setTitle(`Error`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .addField('Invalid date', "Try XX/XX, day/month")
+                    .setTimestamp()
+
+                    interaction.reply({embeds: [err3]});
             }
         } else {
-            interaction.reply(`Wrong date form, try day/month`);
+            const err4 = new MessageEmbed()
+                    .setTitle(`Error`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .addField('Wrong date form, try: XX/XX, day/month')
+                    .setTimestamp()
+
+                    interaction.reply({embeds: [err4]});
         }
         
     },

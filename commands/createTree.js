@@ -7,6 +7,7 @@ const {
     isAdm,
     isScheduled
 } = require("../auths.js");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -35,9 +36,20 @@ module.exports = {
               });
 
             await tree.save();
-            interaction.reply(`Successfully generated tree for the tournament on day: ${value}`);
+            const treemsg = new MessageEmbed()
+                .setTitle(`Successfully create a tree to the tournament on ${date}`)
+                .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                .addField('Organizer', `${interaction.member.user.tag}`)
+                .setTimestamp()
+
+                interaction.reply({embeds: [treemsg]});
         } else {
-          interaction.reply(`Failed to generate tournament tree`);
+            const err = new MessageEmbed()
+            .setTitle(`Failed to generate tournament tree`)
+            .setThumbnail(`${interaction.member.user.avatarURL()}`)
+            .setTimestamp()
+
+            interaction.reply({embeds: [err]});
         }
     },
 };

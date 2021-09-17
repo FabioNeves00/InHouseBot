@@ -6,6 +6,7 @@ const {
     isOwner,
     isOnTeam
 } = require("../auths.js")
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -31,14 +32,26 @@ module.exports = {
 
             if (team && isOwner(interaction) && isOnTeam(user)) {
 
-                const updatedTeam = team.captain.user.tag
+                team.captain = `${user.username}#${user.discriminator}`
                 let updatedPlayers = team.players.splice(team.players.indexOf(user), 1)
-                updatedPlayers = team.players.push(interaction.member.user.tag)
-                
-                team.save().then(
-                    interaction.reply(`The new captain is ${user}`)
-                )
-            } else interaction.reply(`You're not the owner of the user's team or player is not on the team`)
+                team.players.push(interaction.member.user.tag)
+
+                team.save()
+                const success = new MessageEmbed()
+                    .setTitle(`Team: ${team.name}`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .addField('Previous Captain', `${interaction.member.user.tag}`)
+                    .addField('New Captain', `${user}`)
+                    .setTimestamp()
+                interaction.reply({ embeds: [success] });
+            } else {
+                const err1 = new MessageEmbed()
+                    .setTitle(`Failed to change captain`)
+                    .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                    .setTimestamp()
+
+                interaction.reply({ embeds: [err1] });
+            }
         })
     }
 };

@@ -42,11 +42,21 @@ module.exports = {
                       teams: newArr
                     }
                   })
-                interaction.reply(`Team ${winner} won the match`)
+                  const teamMsg = new MessageEmbed()
+                  .setTitle(`${winner} vs ${loser}`)
+                  .setThumbnail(`${interaction.member.user.avatarURL()}`)
+                  .addField('Match Winner', `${winner}`)
+                  .setTimestamp()
+              
+                  interaction.reply({embeds: [teamMsg]});
                 
             }
         } else {
-            interaction.reply("You're not an admin")
+            const err = new MessageEmbed()
+            .setTitle(`You are not an admin`)
+            .setThumbnail(`${interaction.member.user.avatarURL()}`)
+            .setTimestamp()
+            interaction.reply({embeds: [err]});
         }
     }
 };

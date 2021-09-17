@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Tree = require("../models/tournamentTrees");
+const Tournament = require("../models/Tournament");
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,8 +19,15 @@ module.exports = {
     } = interaction.options.data[0];
     
     let tree = await Tree.findOne({ date: value })
+    let tournament = await Tournament.findOne({ date: value })
     if (!tree) {
-      interaction.reply("There is no tournament scheduled for that day")
+      const err1 = new MessageEmbed()
+      .setTitle(`There is no tournament tree on day: ${value}`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .addField('Date not found', `Try other date`)
+      .setTimestamp()
+
+      interaction.reply({embeds: [err1]});
       return
     }
     let ArrNames = []
@@ -27,6 +36,13 @@ module.exports = {
             ArrNames.push(`\n${tree.teams[count][counter]} vs ${tree.teams[count][counter + 1]}`)
       }
     }
-    interaction.reply(`A chave é : ${ArrNames}`)
+    const treemsg = new MessageEmbed()
+      .setTitle(`Tournament tree on day: ${value}`)
+      .setThumbnail(`${interaction.member.user.avatarURL()}`)
+      .addField('Organizer', `${tournament.organizer}`)
+      .addField('Teams', `${ArrNames}`)
+      .setTimestamp()
+
+      interaction.reply({embeds: [treemsg]});
   }
 };

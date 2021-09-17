@@ -1,5 +1,10 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Tournament = require("../models/Tournament");
+const Tree = require("../models/tournamentTrees");
+const { MessageEmbed } = require("discord.js");
+const {
+    isScheduled
+} = require("../auths.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,12 +19,26 @@ module.exports = {
         const {
             value
         } = interaction.options.data[0];
-
-        let tournament = await Tournament.findOne({ date: value })
-        if (!tournament) {
-            interaction.reply("There is no tournament scheduled for that day")
+        const tournament = await Tournament.findOne({date: value})
+        if(!isScheduled(value)) {
+            const err1 = new MessageEmbed()
+            .setTitle(`There is no tournament tree on day: ${value}`)
+            .setThumbnail(`${interaction.member.user.avatarURL()}`)
+            .addField('Date not found', `Try other date`)
+            .setTimestamp()
+            
+            interaction.reply({embeds: [err1]});
             return
         }
-        await interaction.reply(`-=Infos=-\nData:${tournament.date}\nPremiação:${tournament.prize}\nOrganizador:${tournament.organizer}`)
+        let exists = Tree.exists({date: value}) ? "Tournament tree generated" : "Tournament tree not generated"
+        const tournamentmsg = new MessageEmbed()
+        .setTitle(`Tournament day: ${value}`)
+        .setThumbnail(`${interaction.member.user.avatarURL()}`)
+        .addField('Organizer', `${interaction.member.user.tag}`)
+        .addField('Infos', `Date: ${value}\nPrize Pool: ${tournament.prize}`)
+        .addField('Tree', `${exists}`)
+        .setTimestamp()
+  
+        interaction.reply({embeds: [tournamentmsg]});
     }
 };
