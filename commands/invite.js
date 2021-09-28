@@ -33,9 +33,9 @@ module.exports = {
       if (team.players.length < 5 && isOwner(interaction) && isOnTeam(user)) {
 
         let invited = `${user.username}#${user.discriminator}`
-        team.players.push(invited)
+        updatedPlayers = team.players.push(invited)
 
-        await Team.updateOne({
+        Team.updateOne({
           captain: interaction.member.user.tag
         }, {
           $set: {

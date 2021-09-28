@@ -11,7 +11,8 @@ const tournamentSchema = mongoose.Schema({
     prize: {
         type: String,
         required: true,
-    }
+    },
+    tournament: {type: Boolean}
 });
 
 module.exports = mongoose.model("Tournament", tournamentSchema)

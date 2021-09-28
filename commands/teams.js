@@ -18,11 +18,15 @@ module.exports = {
         return
     }
     let ArrNames = []
-    for (let count = 0; count < teams.length; count++) {
-      ArrNames.push(" " + teams[count].name);
+    if(teams.length == 0){
+      ArrNames = "No teams created"
+    } else {
+      for (let count = 0; count < teams.length; count++) {
+        ArrNames.push(" " + teams[count].name);
+      }
     }
     const teammsg = new MessageEmbed()
-      .setTitle(`Teams created`)
+      .setTitle(`All Teams`)
       .setThumbnail(`${interaction.member.user.avatarURL()}`)
       .addField('Teams', `${ArrNames}`)
       .setTimestamp()

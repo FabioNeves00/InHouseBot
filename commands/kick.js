@@ -33,7 +33,7 @@ module.exports = {
       if (team && isOwner(interaction) && isOnTeam(user)) {
 
         const updatedPlayers = team.players.splice(team.players.indexOf(user), 1)
-        await Team.updateOne({
+        Team.updateOne({
           players: {
             $in: [user]
           }
@@ -42,7 +42,7 @@ module.exports = {
             players: [updatedPlayers]
           }
         })
-        await team.save()
+         team.save()
         const teammsg = new MessageEmbed()
         .setTitle(`Successfully kicked player ${user.username}`)
         .setThumbnail(`${interaction.member.user.avatarURL()}`)
