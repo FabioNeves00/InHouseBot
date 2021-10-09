@@ -1,6 +1,10 @@
 const Team = require("./models/Team");
 const Tournament = require("./models/Tournament");
 
+const hasAccepted = (interaction) => {
+
+}
+
 const isOwner = async (interaction) => {
   return await Team.exists({
     captain: interaction.member.user.tag
@@ -33,5 +37,6 @@ module.exports = {
   Exists,
   isOnTeam,
   isAdm,
-  isScheduled
+  isScheduled,
+  hasAccepted
 }

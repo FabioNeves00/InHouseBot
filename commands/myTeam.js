@@ -26,7 +26,6 @@ module.exports = {
     else{
       players = "empty"
     }
-    console.log(players)
     const teamMsg = new MessageEmbed()
     .setTitle(`${team.name}`)
     .setThumbnail(`${interaction.member.user.avatarURL()}`)
